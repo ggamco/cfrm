@@ -1,6 +1,7 @@
 package com.gmbdesign.cfrm.dto;
 
 import com.gmbdesign.cfrm.bussiness.ECredentialType;
+import com.gmbdesign.cfrm.bussiness.ICredentialCard;
 import com.gmbdesign.cfrm.dao.CredencialDAO;
 import com.gmbdesign.cfrm.impl.CredencialDAOImpl;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
  *
  * @author ggamboa
  */
-public class AbonadoDTO extends AbstractEntidadDTO implements Serializable {
+public class AbonadoDTO implements ICredentialCard, Serializable {
 
     /**
      * serialVersionUID
@@ -36,7 +37,6 @@ public class AbonadoDTO extends AbstractEntidadDTO implements Serializable {
     }
 
     public AbonadoDTO(Long idAbonado, String numeroSocio, String codigoSistema, String credencial, String createDate, AbonadoDataDTO abonadoData) {
-        super(ECredentialType.ABONADO.toString());
         this.idAbonado = idAbonado;
         this.numeroAbonado = numeroSocio;
         this.codigoSistema = codigoSistema;
@@ -141,6 +141,11 @@ public class AbonadoDTO extends AbstractEntidadDTO implements Serializable {
 
     public void setAsiento(String asiento) {
         this.asiento = asiento;
+    }
+
+    @Override
+    public String getCredentialType() {
+        return ECredentialType.ABONADO.tipo();
     }
 
     @Override

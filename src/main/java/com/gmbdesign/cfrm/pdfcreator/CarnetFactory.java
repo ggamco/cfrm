@@ -58,7 +58,7 @@ public class CarnetFactory {
             barcode128.setSize(7);
             Image code128Image = barcode128.createImageWithBarcode(cb, null, null);
             //TODO: cambiar posición absoluta del codigo de barras
-            code128Image.setAbsolutePosition(22.5f, 46f);
+            code128Image.setAbsolutePosition(22.5f, 68f);
 
             document.add(code128Image);
 
@@ -67,10 +67,10 @@ public class CarnetFactory {
             cb.saveState();
             cb.beginText();
             cb.setFontAndSize(font, 7);
-            cb.showTextAligned(1, carnet.getAlias(), 76, 98, 0);            //+10
-            cb.showTextAligned(0, carnet.getCredentialType(), 5, 88, 0);    //+8
-            cb.showTextAligned(0, carnet.getNumberCode(), 5, 80, 0);        //+8
-            cb.showTextAligned(0, carnet.getAccessDoor(), 5, 72, 0);
+            cb.showTextAligned(1, carnet.getAlias(), 76, 128, 0);            //+10
+            cb.showTextAligned(0, carnet.getCredentialType(), 5, 118, 0);    //+8
+            cb.showTextAligned(0, carnet.getNumberCode(), 5, 110, 0);        //+8
+            cb.showTextAligned(0, carnet.getAccessDoor(), 5, 102, 0);
 
 //            cb.showTextAligned(1, carnet.getAlias(), 76, 40, 0);
 //            cb.showTextAligned(0, carnet.getCredentialType(), 5, 30, 0);

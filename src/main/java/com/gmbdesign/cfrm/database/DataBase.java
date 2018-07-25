@@ -17,7 +17,7 @@ public final class DataBase {
 //    public static final String DATABASE = "cfrm";
 
     public static final String HOST = "localhost";
-    public static final String PORT = "8889";
+    public static final String PORT = "3306";
     public static final String USER = "root";
     public static final String PASS = "root";
     public static final String DATABASE = "cfrm";

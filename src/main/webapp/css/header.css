@@ -1,0 +1,363 @@
+/*1.- HEADER =================================================================*/
+/*============================================================================*/
+
+/*1.1.- LOGIN ================================================================*/
+
+.login{
+    position: absolute;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 10px;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    text-align: center;
+}
+
+.login p{
+    display: none;
+    padding: 5px;
+    color: #fff;
+}
+
+.icon-cog{
+    float: right;
+    padding: 10px;
+    font-size: 1.2em;
+    color: #fff;
+    opacity: .75;
+
+}
+
+.header-nav-cont{
+    width: 279px;
+    height: 100%;
+    /*border-right: 1px #dedede solid;*/
+    z-index: 99999;
+    overflow: hidden;
+}
+
+/*.header-nav-cont header::-webkit-scrollbar{
+    display: none;
+}*/
+
+.header-nav-cont header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255,255,255,1);
+    height: 239px;
+    width: 279px;
+    text-align: center;
+    border-bottom: 1px #dedede solid;
+    overflow: auto;
+    z-index: 2;
+}
+
+.header-nav-cont .escudo img{
+    padding-top: 8px;
+    width: 35%;
+}
+
+.header-nav-cont header div h1{
+    margin-top: -8px;
+    font-weight: bolder;
+    color: #0055a0;
+    font-size: 2.35em;
+
+}
+.header-nav-cont header div h2{
+    font-weight: lighter;
+    color: #0055a0;
+    font-size: 1em;
+    margin-top: -8px;
+}
+
+/*1.2.- SIDEMENU =============================================================*/
+
+.icon-circle-down{
+    float: right;
+    position: absolute;
+    top:0;
+    right: 0;
+    margin-top: 3px;
+    padding: 15px;
+    margin-right: 5px;
+}
+.icon-circle-down.rotate{
+    float: right;
+    position: absolute;
+    top:0;
+    right: 0;
+    margin-top: 3px;
+    padding: 15px;
+    margin-right: 5px;
+    -moz-transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
+    transform:rotate(180deg);
+}
+
+.menu_bar {
+    display:none;
+}
+
+nav ul #copa{
+    /*display: none;*/
+}
+
+.header-nav-cont nav ul li #temp{
+    float: right;
+    position: relative;
+    font-size: 0.8em;
+    font-weight: lighter;
+    margin-right: 40px;
+    padding: .15em;
+}
+
+.sidemenu {
+    top: 239px;
+    bottom: 0;
+    position: fixed;
+    background:#fff;
+    z-index: 0;
+    width:295px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+.header-nav-cont nav ul {
+    list-style:none;
+}
+
+.header-nav-cont nav ul li {
+    display: block;
+    position: relative;
+    border-bottom: 1px #dedede solid;
+}
+
+.header-nav-cont nav ul li:hover {
+    background:rgba(240,240,240,.25);
+}
+
+.header-nav-cont nav ul li a,  .header-nav-cont nav ul li label{
+    color:#0055a0;
+    display:block;
+    text-decoration:none;
+    padding: 15px 15px;
+/*    margin-left: 15px;*/
+}
+
+/*nav ul li a span {
+    margin-right:10px;
+    margin-top: 2px;
+}*/
+
+/*span[class="icon-circle-down"]{
+    float: right;
+    position: absolute;
+    top:0;
+    right: 16px;
+    margin-top: 3px;
+    padding: 15px;
+}*/
+
+.header-nav-cont nav ul li:hover .children {
+    display:none;
+}
+
+.header-nav-cont nav ul li .children {
+    font-size: .8em;
+    display: none;
+    background:#fff;
+    position: relative;
+    width: 279px;
+    z-index:1000;
+}
+
+.header-nav-cont nav ul li .children li {
+    display:block;
+    border-top: 1px #dedede dotted;
+    border-bottom: 1px solid rgba(255,255,255,.5);
+}
+
+.header-nav-cont nav ul li .children li a {
+    display: block;
+    padding-left: 30px;
+}
+
+.header-nav-cont nav ul li .caret {
+    position: relative;
+    top:3px;
+    float: right;
+}
+
+/*1.3.- SOCIAL-LINKS =========================================================*/
+
+.header-nav-cont nav .social-link{
+    display: none;
+}
+
+.header-nav-cont nav .social-link{
+    margin: 20px 0 15px 0;
+    width: 100%;
+    font-size: 2em;
+    color: #0055a0;
+    position: relative;
+    text-align: center;
+}
+
+.header-nav-cont nav .social-link ul li, .social-link ul li{
+    border: none;
+    display: inline-block;
+    padding: 0 5px 0 5px;
+}
+
+.header-nav-cont nav .social-link ul li:hover{
+    background-color: #fff;
+}
+
+.header-nav-cont nav .social-link ul li span:hover{
+    color: #dedede;
+    cursor: pointer;
+}
+
+/*1.4.- PARTNERS =============================================================*/
+.header-nav-cont nav .partners{
+    position: relative;
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    margin-right: 15px;
+}
+
+.header-nav-cont nav .partners img{
+    width: 120px;
+    padding: 5px;
+
+
+}
+
+/*1.5.- MEDIA-QUERIES ========================================================*/
+
+@media screen and (max-width: 768px) {
+    body {
+        padding-top:0px;
+    }
+
+    .menu_bar {
+        display:block;
+        width:100%;
+        position: fixed;
+        top:0;
+        background:#E6344A;
+        z-index: 9999;
+        height: 50px;
+    }
+
+    .menu_bar .bt-menu {
+        display: block;
+        position: absolute;
+        right: 0;
+        padding: 10px;
+        color: #fff;
+        overflow: hidden;
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .menu_bar .bt-menu span {
+        position: fixed;
+        left: 2%;
+        font-size: 30px;
+    }
+
+    .header-nav-cont .sidemenu{
+        top: 50px;
+    }
+
+    .header-nav-cont {
+        top:50px;
+        max-width: 279px;
+        height: 100vh;
+        position: absolute;
+        right:100%;
+        margin: 0;
+        overflow: scroll;
+        border-right: none;
+    }
+
+    .sidemenu{
+        margin-top: 239px;
+    }
+
+    .sidemenu ul li {
+        display: block;
+        border-bottom:1px solid rgba(255,255,255,.5);
+    }
+
+    .sidemenu ul li a {
+        display: block;
+    }
+
+    .sidemenu ul li:hover .children {
+        display: none;
+    }
+
+    .sidemenu ul li .children {
+        width: 100%;
+        position: relative;
+    }
+
+    .sidemenu ul li .children li a {
+        margin-left:20px;
+    }
+
+    .sidemenu ul li .caret {
+        float: right;
+    }
+
+    header{
+        /*display: none;*/
+        margin-top: 50px;
+        height: 289px;
+    }
+    .gradient{
+        display: none;
+    }
+    .main{
+        z-index: 1;
+        left: 0;
+        margin: 0 2%;
+    }
+
+}
+
+@media screen and (max-device-width: 414px){
+    header{
+        display: none;
+    }
+    .sidemenu{
+        margin-top: 0px;
+    }
+    .menu_bar .bt-menu{
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 50px;
+        padding: 0;
+        right: 2%;
+    }
+    .bt-menu span{
+        line-height: 50px;
+    }
+    
+    #temp{
+        right: 15px;
+    }
+    .icon-circle-down{
+        right: 15px;
+    }
+    .icon-circle-down.rotate{
+        right: 15px;
+    }
+} 

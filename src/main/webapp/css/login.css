@@ -1,0 +1,250 @@
+/*INDICE DE CSS ==============================*/
+
+/*00 - RESET*/
+/*01 - LOGIN*/
+
+/*============================================*/
+
+/*00 - RESET*/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {font-family: 'Open Sans', sans-serif;}
+a{text-decoration: none;}
+ul{list-style: none;}
+
+/*01 - LOGIN*/
+
+.table{
+    display: table;
+    width: 100%;
+    height: 100vh;
+    background-image: url(../img/slider_login.png);
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+}
+
+.table-cell{
+    display: table-cell;
+    vertical-align: middle;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.table img{
+    margin-bottom: 20px;
+    opacity: .9;
+}
+
+.login-box{
+    margin-top: 10px;
+}
+
+.login-box input[type="text"]{
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    font-family: 'Open Sans', sans-serif;
+    appearance: none;
+    box-shadow: none;
+    width: 300px;
+    padding: 10px;
+    height: 50px;
+    font-size: 1em;
+    font-weight: 300;
+    margin: 5px 10px;
+    transition: border 0.3s;
+    border-radius: 10px 10px 0 0;
+    z-index: 0;
+    border-width: 2px 2px 1px 2px;
+    border-style: solid;
+    border-color: #fff;
+}
+
+.login-box input[type="text"]:focus,
+.login-box input[type="text"].focus{
+    outline: none;
+    border-width: 2px 2px 1px 2px;
+    border-style: solid;
+    border-color: #0055a0;
+}
+
+.login-box input[type="password"],
+#correo{
+    position: relative;
+    top: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    font-family: 'Open Sans', sans-serif;
+    border-top: 1px;
+    appearance: none;
+    box-shadow: none;
+    width: 300px;
+    padding: 10px;
+    height: 50px;
+    font-size: 1em;
+    font-weight: 300;
+    margin: 5px 10px;
+    transition: border 0.3s;
+    border-radius: 0 0 10px 10px;
+    border-width: 1px 2px 2px 2px;
+    border-style: solid;
+    border-color: #fff;    
+}
+
+#repite{
+    top: 0;
+}
+
+.login-box input[type="password"]:focus,
+.login-box input[type="password"].focus,
+#correo:focus,
+#correo.focus{
+    outline: none;
+    border-width: 1px 2px 2px 2px;
+    border-style: solid;
+    border-color: #0055a0;
+}
+
+.login-box input[type="password"]:active,
+.login-box input[type="password"].active{
+    z-index: 2;
+}
+.btn{
+    cursor: pointer;
+    position: relative;
+    top: 10px;
+    left: 120px;
+    border-style: none;
+    background-color: transparent;
+}
+
+.icon-circle-right{
+    background-color: transparent;
+    color: #fff;
+    font-size: 2.2em;
+    font-weight: lighter;
+}
+
+.icon-circle-right:hover{
+    color: #e42b38;
+}
+
+.separator{
+    position: fixed;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,.1);
+}
+
+.copyright{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0 50px;
+    line-height: 50px;
+    font-weight: lighter;
+    font-size: .8em;
+    color: rgba(255,255,255,.6);
+}
+
+.copyright a{
+    color: rgba(228,43,56,.6);
+}
+
+.copyright a:hover{
+    color: rgba(228,43,56,1);
+}
+
+.contact-mail{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 0 50px;
+    line-height: 50px;
+    font-weight: lighter;
+    font-size: .8em;
+    color: rgba(255,255,255,.6);
+}
+
+.contact-mail a{
+    color: rgba(228,43,56,.6);    
+}
+
+.contact-mail a:hover{
+    color: rgba(228,43,56,1);
+}
+
+.label-login{
+    display: block;
+    margin: 0 auto;
+    line-height: 30px;
+    font-weight: lighter;
+    font-size: 1em;
+    width: 300px;
+    height: 30px;
+    color: rgba(255,255,255,.7);
+    background-color: rgba(255,255,255,.1);
+    border-radius: 10px;
+}
+
+.pass{
+    margin-top: 35px;
+    font-size: .75em;
+}
+
+.pass a{
+    color: #e42b38;
+}
+
+.error,
+.not-error{
+    position: relative;
+    display: block;
+    width: 300px;
+    height: 50px;
+    line-height: 50px;
+    margin: 0 auto;
+    top: 40px;
+    border: 2px solid #E6344A;
+    border-radius: 10px;
+    background-color: rgba(228, 43, 56, .15);
+    color: rgba(255,255,255,.7);
+    font-weight: lighter;
+    font-size: 1em;
+}
+
+.not-error{
+    border-color: #3C765E;
+    background-color: rgba(223, 240, 216, .4);
+    color: #444;
+    font-weight: 400;
+}
+
+@media screen and (max-device-width: 375px){
+    .table-cell{
+        vertical-align: initial;
+        padding-top: 10px;
+    }
+    .contact-mail, .copyright{
+        display: none
+    }
+    .copy-media p:before{
+        font-size: .8em;
+        display: block;
+        line-height: 50px;
+        text-align: center;
+        color: #ccc;
+        content:'Copyright 2016 | Todos los derechos reservados.';
+    }
+    .btn{
+        top: 5px;
+    }
+    .table img{
+        width: 40%;
+    }
+}

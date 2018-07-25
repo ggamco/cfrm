@@ -1,0 +1,702 @@
+-- phpMyAdmin SQL Dump
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: localhost:3306
+-- Tiempo de generación: 28-08-2017 a las 00:26:28
+-- Versión del servidor: 5.6.28
+-- Versión de PHP: 5.6.25
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `cfrm`
+--
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+DROP PROCEDURE IF EXISTS `crearSocio`$$
+CREATE PROCEDURE `crearSocio` (IN `p_num` VARCHAR(11), IN `p_codigo` VARCHAR(26), IN `p_credencial` VARCHAR(4), IN `p_nombre` VARCHAR(100), IN `p_apellido1` VARCHAR(100), IN `p_apellido2` VARCHAR(100), IN `p_dni` VARCHAR(10), IN `p_nacimiento` VARCHAR(10), IN `p_alta` VARCHAR(10), IN `p_correo` VARCHAR(100), IN `p_telefono` VARCHAR(15), IN `p_direccion` VARCHAR(150), IN `p_postal` VARCHAR(5), IN `p_ciudad` VARCHAR(100), IN `p_ccc` VARCHAR(29))  BEGIN
+ 
+    INSERT INTO socio (numero, codigoSistema, credencial) VALUES (p_num, p_codigo, p_credencial);
+    
+    INSERT INTO socio_data (nombre, apellido1, apellido2, dni, nacimiento, alta, correo, telefono, direccion, codigoPostal, ciudad, ccc, codigoSistema) VALUES (p_nombre, p_apellido1, p_apellido2, p_dni, p_nacimiento, p_alta, p_correo, p_telefono, p_direccion, p_postal, p_ciudad, p_ccc, p_codigo);
+END$$
+
+DROP PROCEDURE IF EXISTS `crearUsuario`$$
+CREATE PROCEDURE `crearUsuario` (IN `p_user` VARCHAR(32), IN `p_pass` VARCHAR(64), IN `p_role` VARCHAR(10), IN `p_nombre` VARCHAR(45), IN `p_apellido1` VARCHAR(45), IN `p_apellido2` VARCHAR(45), IN `p_dni` VARCHAR(32), IN `p_nacimiento` VARCHAR(10), IN `p_email` VARCHAR(100))  BEGIN
+    DECLARE _id_usuario INT DEFAULT 0;
+ 
+    INSERT INTO usuario (user, pass, role) VALUES (p_user, p_pass ,p_role);
+    
+    SET _id_usuario = LAST_INSERT_ID();
+    
+    INSERT INTO usuario_data (nombre, apellido1, apellido2, dni, nacimiento, email, id_usuario) VALUES (p_nombre, p_apellido1, p_apellido2, p_dni, p_nacimiento, p_email, _id_usuario);
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `credencial`
+--
+
+DROP TABLE IF EXISTS `credencial`;
+CREATE TABLE `credencial` (
+  `idCredencial` int(11) NOT NULL,
+  `credencial` varchar(100) COLLATE utf8_bin NOT NULL,
+  `codigo` varchar(4) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Truncar tablas antes de insertar `credencial`
+--
+
+TRUNCATE TABLE `credencial`;
+--
+-- Volcado de datos para la tabla `credencial`
+--
+
+INSERT INTO `credencial` (`idCredencial`, `credencial`, `codigo`) VALUES
+(1, 'ADULTO', 'RMSC'),
+(2, 'SOCIO INFANTIL', 'RMSI'),
+(3, 'JUBILADO', 'RMJB'),
+(4, 'GRADA FAN', 'RMGF');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `evento`
+--
+
+DROP TABLE IF EXISTS `evento`;
+CREATE TABLE `evento` (
+  `idEvento` int(11) NOT NULL,
+  `fecha` varchar(10) COLLATE utf8_bin NOT NULL,
+  `hora` varchar(5) COLLATE utf8_bin NOT NULL,
+  `jornada` varchar(100) COLLATE utf8_bin NOT NULL,
+  `torneo` varchar(100) COLLATE utf8_bin NOT NULL,
+  `visitante` varchar(100) COLLATE utf8_bin NOT NULL,
+  `esActivo` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Truncar tablas antes de insertar `evento`
+--
+
+TRUNCATE TABLE `evento`;
+--
+-- Volcado de datos para la tabla `evento`
+--
+
+INSERT INTO `evento` (`idEvento`, `fecha`, `hora`, `jornada`, `torneo`, `visitante`, `esActivo`) VALUES
+(1, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(2, '20/08/2017', '12:00', '4', '2 DIVISION B', 'CADIZ', 1),
+(3, '20/08/2017', '12:00', '6', '2 DIVISION B', 'REAL MADRID CASTILLA', 1),
+(4, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(5, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(6, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(7, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(8, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(9, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(10, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(11, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(12, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1),
+(13, '20/08/2017', '12:00', '2', '2 DIVISION B', 'VALLADOLID B', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `socio`
+--
+
+DROP TABLE IF EXISTS `socio`;
+CREATE TABLE `socio` (
+  `idAbonado` int(11) NOT NULL,
+  `numero` int(11) NOT NULL,
+  `codigoSistema` varchar(26) COLLATE utf8_bin NOT NULL,
+  `credencial` varchar(4) COLLATE utf8_bin NOT NULL,
+  `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `active` tinyint(4) NOT NULL DEFAULT '1',
+  `printed` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Truncar tablas antes de insertar `socio`
+--
+
+TRUNCATE TABLE `socio`;
+--
+-- Volcado de datos para la tabla `socio`
+--
+
+INSERT INTO `socio` (`idAbonado`, `numero`, `codigoSistema`, `credencial`, `createDate`, `active`, `printed`) VALUES
+(1, 1, '4a4gode9m6udb61h5j3ang1mvr', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(2, 2, 'vh552kol6flf2g50a1hnv201b1', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(3, 3, '7pilo84mk0ja12avi349pqmf12', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(4, 4, 'me9guqel3lbj53unl73itg8rme', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(5, 5, 'vmmcubtnu3cv8cvjd74ecmdv3e', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(6, 6, '5f240pmm94qo1hvbfj5aujqili', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(7, 7, '6ls7v0tnoomr2mg6spgn7ob4ge', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(8, 8, 'd7qumrgcg90hq9felgsssanagk', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(9, 9, '6uge13lg6u3hb88ss9mv0guf09', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(10, 10, 'duvc979nqr2qnvb6pfogndccbg', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(11, 11, 'fp0rmn9lk9sro951n0f4sgh8hv', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(12, 12, '8i4edpl4sg878pb8banp9tkj6j', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(13, 13, 'ltldapvo4664sottg0nrrj78hm', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(14, 14, '9muhd41q6klkrjnq4l4vne2bd0', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(15, 15, 'jg3ia9t8s5hsbi9m4godjo7prs', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(16, 16, 'srlv4t0hoev11f6q21fmq70l6d', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(17, 17, '6o29tqcm1jdlucj1qkducgejqg', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(18, 18, '4dvsh725qfonv1a6pibh8igme8', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(19, 19, 't4h554c6lliilfofambe6ebfmn', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(20, 20, 'v9f5unsr2kvkgnks649gt5sh1m', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(21, 21, 'p7d6p6lrabar1di5paf42f644g', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(22, 22, '2voe72k3i1jkcj87bst21d90cb', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(23, 23, 'bg3mh65n02alc7ef0vlm3rurod', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(24, 24, 'kb71788vla77321h49gmhobds2', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(25, 25, 'ffmtsc14574ltna1ik59fhk6rj', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(26, 26, 'hd53svnn2tbetsafhm1bdkm14i', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(27, 27, 'eihtvmqcmbc2chuvuk4qac39pc', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(28, 28, 'p89jaoq65lgu4cnpvuc0rqtnab', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(29, 29, '50daha4t5sbod454ljo9jm2p2', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(30, 30, '74terq8ham9ar04duao8p100hu', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(31, 31, 'c10c7f14k0bp2ks1hvl0bc9jtu', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(32, 32, 'erf887fqe7g09riicp7kc7scgh', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(33, 33, 'mibuimuhc4v8ajeai2dt7bv76l', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(34, 34, 'rknc8q7slgcbp5qc42gc2nep7n', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(35, 35, 'r0j6tarb43m8gltmjdkj8lqgni', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(36, 36, 's34a3708g6eehip8ofelp56962', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(37, 37, 'vpkvjrot71dki3p93309m1vtdb', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(38, 38, 's8va74q270frv48b8bkq617l6h', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(39, 39, 'dn38pk02m27q3kpqn45t1ghfbk', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(40, 40, 'mfo75embaq117mnuhd2kpdt7jj', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(41, 41, 'jonjv7fpi1omsa3kbea5nkf7rp', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(42, 42, 'ifot9bv81adfgvgok9et6vfosg', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(43, 43, 'rlg1os8d3nbiv1lqal18r95j7v', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(44, 44, 'cogpnhtas3h9041uqhr02eahr9', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(45, 45, 'mvioggbbpau57tlqihuctlia09', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(46, 46, '8bhqmm13avesdfmd8tftogglft', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(47, 47, 'n1g68mq4h49l388ms60hfo5dc5', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(48, 48, '8jcdo93gr1bd136mh6vs99ga8h', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(49, 49, '2kedcd647hipb7nkrojsua02cj', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(50, 50, 'f1pto4khn12kj9ub1ft2h49esu', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(51, 51, 'ehmnblhvmv9m06abjm6p6hmsc5', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(52, 52, 'prptd8jt9650ei4pamsl2o4q3k', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(53, 53, '6sf9b7v5ag3e12sb54tse051ps', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(54, 54, '2mvgh2mb7vugldmdcskitd95ru', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(55, 55, '94g38f459jchq9mhe7c27ui17e', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(56, 56, 'c83n253v4irrg0e9g4eu718691', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(57, 57, '50bh0lr35f70i3dus45vrue65f', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(58, 58, 'clqme154sk8oekrijr236lc1nu', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(59, 59, '827c86qbglvn8f9hr7gck6kebo', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(60, 60, '8ri8bqnnk78497cgb6qpmf3jp6', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(61, 61, '86e94s78udfjkcq9a7iq937h8o', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(62, 62, 'khm98ddn7k3ufjl1kjso7495m0', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(63, 63, 'bt2vkpqmb3evluh345f7gj0l3s', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(64, 64, '67cdd192jpdvj3tl3od21oebm4', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(65, 65, 'ce1l20ef0qjdvk2lmo182l91i5', 'RMSI', '2017-08-27 17:52:03', 1, 1),
+(66, 66, 'kihgq7m9jmcrdal88cjs9f7jde', 'RMSI', '2017-08-27 17:52:03', 1, 1),
+(67, 67, 'hc1h2grjq261283lpqmhlmfb3q', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(68, 68, '549upa4bjbvk2ppmpsojj8nivg', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(69, 69, 'o4851r3750nrehl5vj7qlvftrg', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(70, 70, 'b7aafo5mhtfmcn7ib1dq0jintc', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(71, 71, 'fqkapgcdnoevr1f0q92ireem3m', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(72, 72, 'nfgiujlcr3r3mrfsrv955s6t8t', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(73, 75, 'bi3gflvr0i3005agmmp2l0svmk', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(74, 76, 'm07l5blvfvqq5uoia10o2ah51b', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(75, 77, 'n6v14ap69j7qhukhcli972bdl3', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(76, 78, 'rljr3qki52bstpt84aj81jl3j9', 'RMSI', '2017-08-27 17:52:03', 1, 1),
+(77, 79, 'o5hn3n6s4pn3ad27b7if7ohp52', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(78, 80, 'vlkdumcljv3hklha2d3cala0ef', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(79, 81, '9dusjv06kekcnneidjf0f2pp9s', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(80, 82, '4fv1ssk5revkgfaga7n8pd4js', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(81, 83, '7koks51vgs5mjhigt7ngoh7mb3', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(82, 84, '34ba0gui71j1066hhec1vb1klf', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(83, 85, 'rn0vmjb9fes3d101iamuq0lcgv', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(84, 86, 'k6bmb9is6etnqt5h4bv3erjlrt', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(85, 87, 'fb1r7jsbeu9fquruconpu4bhqp', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(86, 88, 'sr43nmlbaj3rfahqb3pqkumte7', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(87, 89, '3dn1p741pk3d82gm1ar0vmpfi0', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(88, 90, '8pfkh1tv8lrf0nu6qrncskkqqe', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(89, 91, 'tkuj30j61b5lacfcov8pmmogq2', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(90, 92, 'pdrhtu9050k1l8njqdaht12ui8', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(91, 93, 'p1pplmct60cufnev792rlmgk40', 'RMJB', '2017-08-27 17:52:03', 1, 1),
+(92, 94, 'vmh8d5ffukbkcd06vba2t6pcg', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(93, 95, '87kcc48thr68peii94tc3dh4h6', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(94, 96, 'boj37ivaku91lb2dafnfd3005e', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(95, 97, 'cksk1k7646bfu4gi44o73d6bju', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(96, 98, '6n9d0etdb5pbalf0ge2a4ss882', 'RMSC', '2017-08-27 17:52:03', 1, 1),
+(97, 99, 'i3g2epn1beg1lq4ni89g90q3vh', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(98, 100, 's9k2b0d9otm7fabga4n6vh7jta', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(99, 101, 'scm350ft5nco9gpfudgkdid70a', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(100, 102, 's30v44evatvgc2ighvfrc2isaq', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(101, 103, 'mf1ekruj61c2ok5hc1u8ct04vm', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(102, 104, 'u3cv2f21i9p1ukcghgd52cschd', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(103, 105, '1t8u1d2q8k66ba215u90avf5ri', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(104, 106, 'k622rc5tq8kmrcos9er1jbg0nv', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(105, 107, 'pe8st4apkei341mcnbmj9jnorr', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(106, 108, '5krgnicdg9q5uhml8uchiif6qa', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(107, 109, 'k5g6r0dsgpf2ck61dsil9a5pnp', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(108, 110, 'u00o4orj165ovv7m20avhgnkt0', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(109, 111, 'le0q3fj9rbdtm2p0j43nu10r6q', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(110, 112, '6qs6vlqu8btdcqqschil6qk6oj', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(111, 113, '3egb1me3es11jlo6kaem5gqnvj', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(112, 114, 'as6fgqirqkl9u1lbkfdg5h93ac', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(113, 115, 'sqqhm1i060rkgjssbmvl4fvpm', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(114, 116, '74rditcqfhgnr05sqth8bq17j7', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(115, 117, 'p2pqd0o02iq3h2i5ls8crbms62', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(116, 118, '8a9unq8ioh9c15482fr6fn5ga5', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(117, 119, 'h4r1sf8skelvvn30peguagp9sd', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(118, 120, 'fqbmm795n12sm88sahsel8t8kd', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(119, 121, '31ni89tv81h0bdr4l5q0gmun0u', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(120, 122, '3kfmrq69deoc3s0qpd2t3j4k9m', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(121, 123, 'gt925r4rfg7k50vcqi4qu8mehl', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(122, 124, 'jua9e6c38ob4ir5m7sqt7tlm1g', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(123, 125, 'b61qpsnk8g85107anjr6k5g6q0', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(124, 126, 's9unbvquu99rk01b5e0i4cir10', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(125, 127, 'a9tfq5e9b4er6e0i51hp6u20vu', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(126, 128, '2hsmalsjetb91aft408fm8fqi4', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(127, 129, 'u767cc88272ufg1kr2b0152att', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(128, 130, 'uspqk1d8d4heg3oh560jisluoo', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(129, 131, 'bpeqmqvpj0q3dcpau360q9jkdd', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(130, 132, 'fjgvth6v389l7vu598svk3sh2b', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(131, 133, '982ihqqeto0ocq3br4mh7qkcnt', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(132, 134, '7d6v0nlgkeo7egdcb7odi76ovg', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(133, 135, 'mrips3ub0l5pd34b2odg2m3qjl', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(134, 136, '4qee10t1393k4t9nmhdn4hi6jl', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(135, 139, 'qpf53aet60f79fnjqv5nklj9r4', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(136, 140, '2vnavtl720snk763g2as2mtlng', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(137, 141, 'pn36i87119dllsrh4mcotp0vgd', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(138, 142, '72fo5pj2oo78u82f82es5l319q', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(139, 144, 'a815lrunedu617egct117p3ppp', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(140, 145, 'sdqkilbv4ro71qb38v5v0jdstm', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(141, 146, 'igkplc02qfb04u28tdd1uodau6', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(142, 147, 'kpq7n5f10qvha5e1cfsa5kci51', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(143, 148, 'jeot8k79se73af0b2msmuht53o', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(144, 149, '618rqgc95l7rs4rrldp8src923', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(145, 150, 'c22br9ppvl64kdtlj4amhdoffh', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(146, 151, 'h56hteajp4iqn7q99e88ufg31o', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(147, 152, '50emcog21t3qamhauil40l3pvg', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(148, 153, '4o44ebfdpqr57cghakpj0od48i', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(149, 154, '7h4btnko0p5plrc942k8m5io4n', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(150, 155, '5rve3vcm344ilceia6vo1hikb7', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(151, 156, '1je51tmb6re4dfcianktl2g265', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(152, 157, '9icil4pkctmgvl9mmulq7o48ft', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(153, 158, 'jdqkrt4be7c3eov7c7rinkifai', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(154, 159, 'k7f69hmuh2t7g1t9upattsuf24', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(155, 160, 'ie314o9hs6kigt5t6d4dl2c66h', 'RMSI', '2017-08-27 17:52:04', 1, 1),
+(156, 161, 'ibjpsdnm5r7b29e2jqmed1th5v', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(157, 162, 'i6j0asn2t8p4kqjdi77b1678o', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(158, 163, 'agd48e4toqmmniqvldvfrhn7lu', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(159, 164, '7rqhu62490mm03203vecvdcqor', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(160, 165, '3fu00ll9fs240rgi59jek2nvef', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(161, 166, '5suqk2lv3detr90d2ac4d0r9kt', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(162, 167, 'enfe2ds9hlt86cg45oi3p6o0oe', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(163, 168, '77750hpc8cm487ki3ortvacgr', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(164, 169, '54jsfldar5mq50l5qvl5ajad0f', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(165, 170, '2mkb736ml4c02j06drbce0a7f1', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(166, 171, 'sth7ki90eedldfcma44lgfunj5', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(167, 172, 'ka1r6847t3sd188i6tsmpk8f0q', 'RMSC', '2017-08-27 17:52:04', 1, 1),
+(168, 173, 'if2dbm9apo0vj1tfbf7e81ifq9', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(169, 174, 'g12tusolso748dlnkiranf2eqg', 'RMJB', '2017-08-27 17:52:04', 1, 1),
+(170, 6000, 'o56l3jf0c0m3fqbm0kj28us0n1', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(171, 6001, '62oc4b5479getmkjbcd0akr4ho', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(172, 6002, '824js90t1k75jlja3cncbl0fqo', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(173, 6003, 'arq4cklgebk37icgljsisvjpnt', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(174, 6004, 'h1r92dvm81qav7alvqcpn2kar6', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(175, 6005, '2fit6rfur0a8g2hv3iugi6kb44', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(176, 6006, '6odbrrfj6qc1tlc570baed82gb', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(177, 6007, 'qu5ug9mplkm9a68vp68n5dhr97', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(178, 6008, 'j6dvh1cs1oo28upcsdfoha388g', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(179, 6009, '94oj5r03r1k17qc96fsm2dc5gg', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(180, 6010, '26drikbg68ca1g0u3jbd7b2f5i', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(181, 6011, 'so6v1ana8v0u0ahvetgujv8r6n', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(182, 6012, '3qg4tdge42045j0dm6r9ne99ql', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(183, 6013, '6na9apnkk5aj0g4qd7tkt8vlat', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(184, 6014, 'sgu6q7m14jj831q1v2oi9tttho', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(185, 6015, '3bfbq21tf421gvrls00rbo4anj', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(186, 6016, 'qel8fse3eg2vnm87b86loihtq1', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(187, 6017, 'd832b16ri66km3drmghsqr758l', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(188, 6018, '9kcs6o5tplb8hcfrbnuvddhueu', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(189, 6019, 'ovij0rvskr750ipjclr5luo71s', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(190, 6020, 'dvsd739lmc87nf9m3c70d1q6at', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(191, 6021, '604eqf5otjn4592ktes8b3kltt', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(192, 6022, 'htejgev1jfp9m09q1aagsrgop', 'RMGF', '2017-08-27 17:52:04', 1, 1),
+(193, 6023, 'mbjpegpj1t9q9b8gej5bf87eul', 'RMGF', '2017-08-27 17:52:04', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `socio_data`
+--
+
+DROP TABLE IF EXISTS `socio_data`;
+CREATE TABLE `socio_data` (
+  `codigoSistema` varchar(26) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `nombre` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `apellido1` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `apellido2` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `dni` varchar(10) COLLATE utf8_bin NOT NULL,
+  `nacimiento` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+  `alta` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+  `correo` varchar(150) COLLATE utf8_bin DEFAULT NULL,
+  `telefono` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  `direccion` varchar(150) COLLATE utf8_bin DEFAULT NULL,
+  `codigoPostal` varchar(5) COLLATE utf8_bin DEFAULT NULL,
+  `ciudad` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `ccc` varchar(29) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Truncar tablas antes de insertar `socio_data`
+--
+
+TRUNCATE TABLE `socio_data`;
+--
+-- Volcado de datos para la tabla `socio_data`
+--
+
+INSERT INTO `socio_data` (`codigoSistema`, `nombre`, `apellido1`, `apellido2`, `dni`, `nacimiento`, `alta`, `correo`, `telefono`, `direccion`, `codigoPostal`, `ciudad`, `ccc`) VALUES
+('1je51tmb6re4dfcianktl2g265', 'MARIA', 'MONTES DE OCA', 'VERNAZA', '', '', '2017-07-01', '', '695198960', 'NICARAGUA, 7 PO. 2 B', '28220', 'MAJADAHONDA', ''),
+('1t8u1d2q8k66ba215u90avf5ri', 'MANUEL', 'ARCE', 'GARCIA-VELASCO', '', '', '2017-07-01', '', '', 'CARRETERA DEL PLANTIO, 15-2º C', '28220', 'MAJADAHONDA', ''),
+('26drikbg68ca1g0u3jbd7b2f5i', 'ANTONIO', 'MARTINEZ', 'MOLINA', '', '', '2017-07-20', '', '626980369', 'TRAVESIA SAN PEDRO, Nº 4-3º B', '28220', 'MAJADAHONDA', ''),
+('2fit6rfur0a8g2hv3iugi6kb44', 'RICARDO', 'ECHEVARRIA', 'GONZALEZ', '', '', '2017-07-31', '', '913511255', 'CALLE HIGUERAS, 14', '', 'POZUELO DE ALARCON', ''),
+('2hsmalsjetb91aft408fm8fqi4', 'ROBERTO', 'BUSTILLO', 'MONTERO', '', '', '2017-07-01', '', '616408796', 'CALLE PUERTO LOS LEONES, 8-2 H', '28220', 'MAJADAHONDA', ''),
+('2kedcd647hipb7nkrojsua02cj', 'AGUSTIN', 'PINEDA', 'GARCIA', '', '', '2017-07-01', '', '', 'VIENTO,26-1º-1', '28220', 'MAJADAHONDA', ''),
+('2mkb736ml4c02j06drbce0a7f1', 'JOSE ANGEL', 'ARRANZ', 'SANZ', '', '', '2017-07-01', '', '646133282', 'CALLE NUÑEZ DE BALBOA, 3-4D', '28220', 'MAJADAHONDA', ''),
+('2mvgh2mb7vugldmdcskitd95ru', 'JOSE MARIA', 'BUSTAMANTE', 'SAN JOSE', '', '', '2017-07-01', '', '916392377', 'VELAZQUEZ, 37-31A', '28220', 'MAJADAHONDA', ''),
+('2vnavtl720snk763g2as2mtlng', 'ANTONIO', 'IRIONDO', 'ORTEGA', '', '', '2017-07-01', '', '686808730', 'CEMPECINADO, 50-5º C', '28937', 'MOSTOLES', ''),
+('2voe72k3i1jkcj87bst21d90cb', 'ENRIQUE', 'VEDIA', 'PESQUERA', '', '', '2017-07-01', '', '916384896', 'ROSALIA DE CASTRO,13', '28220', 'MAJADAHONDA', ''),
+('31ni89tv81h0bdr4l5q0gmun0u', 'MIGUEL', 'DE LA CALLE', 'GONZALEZ', '', '', '2017-07-01', '', '649989574', 'CALLE BERGANTIN, 33', '28220', 'MAJADAHONDA', ''),
+('34ba0gui71j1066hhec1vb1klf', 'ENRIQUE', 'BERROJALVIZ', 'GRANDE', '', '', '2017-07-01', '', '615367026', 'AVDA. PADRE PIQUER, 60-5º C', '28024', 'MADRID', ''),
+('3bfbq21tf421gvrls00rbo4anj', 'ALFREDO', 'TRIGUEROS', 'RODRIGUEZ', '', '', '2017-07-17', '', '669071406', 'LAS NORIAS, 21-1º 1', '28220', 'MAJADAHONDA', ''),
+('3dn1p741pk3d82gm1ar0vmpfi0', 'JORGE', 'GARCIA', 'FERNANDEZ', '', '', '2017-07-01', '', '620961644', 'CALLE DOCTOR PEREZ GALLARDO, 7 ESCL 1-3º C', '28220', 'MAJADAHONDA', ''),
+('3egb1me3es11jlo6kaem5gqnvj', 'EMILIO', 'TORRIJOS', 'TALBARA', '', '', '2017-07-01', '', '916381739', 'CALLE SAN ANDRES, Nº 17-3º A', '28220', 'MAJADAHONDA', ''),
+('3fu00ll9fs240rgi59jek2nvef', 'ZACARIAS', 'MARITINEZ', 'MAILLO', '', '', '2017-07-01', '', '', 'AVDA. DE ESPAÑA, Nº 34', '28220', 'MAJADAHONDA', ''),
+('3kfmrq69deoc3s0qpd2t3j4k9m', 'ANGEL LUIS', 'BERZAL', 'ANGULO', '', '', '2017-07-01', '', '648112268', 'CALLE COMUNIDAD DE MADRID, 49 PTA. 21', '28660', 'BOADILLA DEL MONTE', ''),
+('3qg4tdge42045j0dm6r9ne99ql', 'ROBERTO', 'BUSTILLO', 'MONTERO', '', '', '2017-07-19', '', '616408796', 'CF-SANTIAGO APOSTOL, Nº 4-1º B', '28220', 'MAJADAHONDA', ''),
+('4a4gode9m6udb61h5j3ang1mvr', 'VICENTE', 'PAREDES', 'PRIETO', '', '', '2017-07-01', '', '916386593', 'MIESES, 12-2ºF', '28220', 'MAJADAHONDA', ''),
+('4dvsh725qfonv1a6pibh8igme8', 'PEDRO LUIS', 'ESTEVEZ', 'ALVAREZ', '', '', '2017-07-01', '', '916383665', 'AVDA. DE ESPAÑA, 34-1º-4', '28220', 'MAJADAHONDA', ''),
+('4fv1ssk5revkgfaga7n8pd4js', 'JOSE LUIS', 'DIEGO', 'FUENTEVILLA', '', '', '2017-07-01', '', '609035607', 'CALLE CORNISA, 17 BAJO E', '28231', 'LAS ROZAS', ''),
+('4o44ebfdpqr57cghakpj0od48i', 'EMILIO', 'BERZOSA', 'ORTEGA', '', '', '2017-07-01', '', '629214342', 'AVDA. DE ESPAÑA', '28220', 'MAJADAHONDA', ''),
+('4qee10t1393k4t9nmhdn4hi6jl', 'CARLOS', 'FIDALGO', 'TATO', '', '', '2017-07-01', '', '607924888', 'CALLE MORRONES, 14-3º B', '28220', 'MAJADAHONDA', ''),
+('50bh0lr35f70i3dus45vrue65f', 'FERNANDO', 'AGUDO', 'PEDRAZA', '', '', '2017-07-01', '', '656626041', 'CALLE L A RIOJA, 72-8º B', '28915', 'LEGANES', ''),
+('50daha4t5sbod454ljo9jm2p2', 'ENRIQUE', 'GANDIA', 'IZPIZUA', '', '', '2017-07-01', '', '917150363', 'CEDROS, Nº 9-URB. MONTECLARO', '28223', 'POZUELO DE ALARCON', ''),
+('50emcog21t3qamhauil40l3pvg', 'ANTONIO', 'GALAN', 'DIAZ', '', '', '2017-07-01', '', '916341853', 'CALLE ZULOAGA, Nº 6-3º B', '28220', 'MAJADAHONDA', ''),
+('549upa4bjbvk2ppmpsojj8nivg', 'JESUS', 'PEÑA', 'ARGUDO', '', '', '2017-07-01', '', '', 'CALLE ISLAS FILIPINAS, 3-3º D', '28220', 'MAJADAHONDA', ''),
+('54jsfldar5mq50l5qvl5ajad0f', 'FELIX JOSE', 'GALLEGO', 'ESCOBAR', '', '', '2017-07-01', '', '659858532', 'CALLE  MERCEDES FORMICA, Nº 9 PORTAL 11-2º A', '28232', 'LAS ROZAS DE MADRID', ''),
+('5f240pmm94qo1hvbfj5aujqili', 'BIENVENIDO', 'VALVERDE', 'LOPEZ', '', '', '2017-07-01', '', '916380406', 'HERNAN CORTES, 4-1º-C', '28220', 'MAJADAHONDA', ''),
+('5krgnicdg9q5uhml8uchiif6qa', 'IGNACIO', 'BLAZQUEZ', 'SANCHEZ', '', '', '2017-07-01', '', '635235798', 'RONDA SAN MARTIN, 7', '28220', 'MAJADAHONDA', ''),
+('5rve3vcm344ilceia6vo1hikb7', 'ALFONSO MIGUEL', 'REINA', 'BRIASCO', '', '', '2017-07-01', '', '654394812', 'SAN FRANCISCO DE SALES, 2-6 BJA.', '28229', 'VILLANUEVA DEL PARDILLO', ''),
+('5suqk2lv3detr90d2ac4d0r9kt', 'CARLOS', 'HERRANZ', 'CASADO', '', '', '2017-07-01', '', '610515690', 'CALLE MORENO TORROJA, 36 BAJO A', '28220', 'MAJADAHONDA', ''),
+('604eqf5otjn4592ktes8b3kltt', 'ALEJANDRO', 'MARCOS', 'DE LA CAÑA', '', '', '2017-07-06', '', '625738355', 'CALLE SAN ANDRES', '28220', 'MAJADAHONDA', ''),
+('618rqgc95l7rs4rrldp8src923', 'JOAQUIN', 'MARITINEZ', 'CALDERON', '', '', '2017-07-01', '', '699978445', 'AVDA. ESPAÑA, 74-1º M', '28220', 'MAJADAHONDA', ''),
+('62oc4b5479getmkjbcd0akr4ho', 'JORGE', 'VEGA', 'GARCIA', '', '', '2017-06-27', '', '616144837', 'VAGUADA ARCIPRESTE, 26-3º A', '28220', 'MAJADAHONDA', ''),
+('67cdd192jpdvj3tl3od21oebm4', 'FERNANDO', 'DE FRUTOS', 'MENDEZ', '', '', '2017-07-01', '', '916382514', 'DOCTOR BASTOS, 9-REST.AS BASTOS', '28220', 'MAJADAHONDA', ''),
+('6ls7v0tnoomr2mg6spgn7ob4ge', 'JOSE', 'ESTEVEZ', 'LOPEZ', '', '', '2017-07-01', '', '916383665', 'AVDA. ESPAÑA, 34-1º-H', '28220', 'MAJADAHONDA', ''),
+('6n9d0etdb5pbalf0ge2a4ss882', 'JUAN', 'TRENADO', 'CABANILLAS', '', '', '2017-07-01', '', '619621966', 'CERRO DEL ESPINO, 7 PO 1 C', '28220', 'MAJADAHONDA', ''),
+('6na9apnkk5aj0g4qd7tkt8vlat', 'DANIEL', 'VILLEGAS', 'GRONDONA', '', '', '2017-07-17', '', '667468889', 'TRAVESIA RAMON Y CAJAL, Nº 3-2 DCHA.', '28220', 'MAJADAHONDA', ''),
+('6o29tqcm1jdlucj1qkducgejqg', 'EULOGIO', 'RUEDAS', 'MUÑOZ', '', '', '2017-07-01', '', '916384990', 'ESCUDERO,22-1º-D', '28220', 'MAJADAHONDA', ''),
+('6odbrrfj6qc1tlc570baed82gb', 'JORGE', 'MUGUERZA', 'GARCIA', '', '', '2017-07-31', '', '645178447', 'CALLE MAR MEDITERRANEO, 62-1-º', '28220', 'MAJADAHONDA', ''),
+('6qs6vlqu8btdcqqschil6qk6oj', 'FRANCISCO', 'VALVERDE', 'VALIENTE', '', '', '2017-07-01', '', '916936532', 'AVDA. DOCTOR FLEMING, Nº 2 Bº A', '28912', 'LEGANES', ''),
+('6sf9b7v5ag3e12sb54tse051ps', 'RAMON', 'LOSADA', 'DIAZ', '', '', '2017-07-01', '', '620893328', 'PLAZA COLON, Nº 3', '28220', 'MAJADAHONDA', ''),
+('6uge13lg6u3hb88ss9mv0guf09', 'HIPOLITO', 'BUSTILLO', 'MONTERO', '', '', '2017-07-01', '', '916381103', 'ISLAS FILIPINAS, 3-1º-B', '28220', 'MAJADAHONDA', ''),
+('72fo5pj2oo78u82f82es5l319q', 'OSCAR', 'LA FUENTE', 'GARCIA', '', '', '2017-07-01', '', '', 'CALLE SAN VICENTE, Nº 21 PORTAL 2º A', '28220', 'MAJADAHONDA', ''),
+('74rditcqfhgnr05sqth8bq17j7', 'JULIA', 'VEDIA', 'PESQUERA', '', '', '2017-07-01', '', '686035427', 'CALLE LA RIOJA, 72-8 B', '28915', 'LEGANES', ''),
+('74terq8ham9ar04duao8p100hu', 'LAUREANO', 'MENDO', 'GOMEZ', '', '', '2017-07-01', '', '916381946', 'JALISCO, Nº 28', '28220', 'MAJADAHONDA', ''),
+('77750hpc8cm487ki3ortvacgr', 'FRANCISCO', 'MORENO', 'CERVERA', '', '', '2017-07-01', '', '661320638', 'CALLE SAN FRANCISCO JAVIER, 4-1º C', '28943', 'FUENLABRADA', ''),
+('7d6v0nlgkeo7egdcb7odi76ovg', 'ANDRES', 'BARRILERO', 'DE LAS HERAS', '', '', '2017-07-01', '', '667636286', 'CALLE COTO BLANCO, Nº 22-1º ', '28220', 'MAJADAHONDA', ''),
+('7h4btnko0p5plrc942k8m5io4n', 'VICENTE', 'CUEVAS', 'ENCINAS', '', '', '2017-07-01', '', '696521747', 'CALLE TEMBLEQUE, Nº 142-5º D', '28024', 'MADRID', ''),
+('7koks51vgs5mjhigt7ngoh7mb3', 'MILEN SLAVCHEV', 'ZAHOV', '', '', '', '2017-07-01', '', '655668878', 'CALLE FRAGATA, 19 .1º  B', '28220', 'MAJADAHONDA', ''),
+('7pilo84mk0ja12avi349pqmf12', 'ANTONIO', 'MUÑOZ', 'FERNANDEZ', '', '', '2017-07-01', '', '916384875', 'TRAVESIA DEL SACRIFICIO, 17', '28220', 'MAJADAHONDA', ''),
+('7rqhu62490mm03203vecvdcqor', 'DANIEL', 'MARTINEZ', 'NIETO', '', '', '2017-07-01', '', '', 'AVDA. DE ESPAÑA, Nº 34', '28220', 'MAJADAHONDA', ''),
+('824js90t1k75jlja3cncbl0fqo', 'ALFONSO', 'VICIOSO', 'SOTO', '', '', '2017-06-27', '', '638047399', 'DOCTOR BARRAQUER, Nº 19-1º A', '28220', 'MAJADAHONDA', ''),
+('827c86qbglvn8f9hr7gck6kebo', 'LEONCIO', 'GARCIA', 'RODRIGUEZ', '', '', '2017-07-01', '', '916388573', 'CALLE CARRETERA DE BOADILLA, 36-3º IZQDA.', '28220', 'MAJADAHONDA', ''),
+('86e94s78udfjkcq9a7iq937h8o', 'GUILLERMO', 'LUCENDO', 'ANDUJAR', '', '', '2017-07-01', '', '607402735', 'CRTRA. DE BOADILLA, 66-4º A', '28220', 'MAJADAHONDA', ''),
+('87kcc48thr68peii94tc3dh4h6', 'PABLO', 'GANDARA', 'ARIN', '', '', '2017-07-01', '', '620195282', 'CRTRA. DEL PLANTIO, Nº 41-3º C', '28220', 'MAJADAHONDA', ''),
+('8a9unq8ioh9c15482fr6fn5ga5', 'PEDRO', 'ARRIBAS', 'MARAÑON', '', '', '2017-07-01', '', '691135136', 'CALLE SAUCES, 6', '28223', 'POZUELO DE ALARCON', ''),
+('8bhqmm13avesdfmd8tftogglft', 'FEDERICO', 'COSTA', 'ROBLEDO', '', '', '2017-07-01', '', '916395756', 'CALLE CHILE, Nº 7-2º B', '28220', 'MAJADAHONDA', ''),
+('8i4edpl4sg878pb8banp9tkj6j', 'LUIS', 'ESTEVEZ', 'REDONDO', '', '', '2017-07-01', '', '916390826', 'TRAVESIA AVDA.ESPAÑA, 8-2º-G', '28220', 'MAJADAHONDA', ''),
+('8jcdo93gr1bd136mh6vs99ga8h', 'LUIS', 'GALA', 'BUSTILLO', '', '', '2017-07-01', '', '916387024', 'ISAAC PERAL, 16-1º A', '28220', 'MAJADAHONDA', ''),
+('8pfkh1tv8lrf0nu6qrncskkqqe', 'VICENTE', 'ARAGUAS', 'ALVAREZ', '', '', '2017-07-01', '', '635109862', 'SAN ISIDRO, Nº 18-3º-F-IZQDA-', '28220', 'MAJADAHONDA', ''),
+('8ri8bqnnk78497cgb6qpmf3jp6', 'PAULINO', 'GALA', 'BUSTILLO', '', '', '2017-07-01', '', '912543851', 'CALLE LA LAGUNA, 3-2º A', '28220', 'MAJADAHONDA', ''),
+('94g38f459jchq9mhe7c27ui17e', 'JOSE LUIS', 'HERNANDEZ', 'ALVAREZ', '', '', '2017-07-01', '', '619464319', 'CERRO DEL ESPINO. Nº 2-ESC.DCHA-2-B', '28220', 'MAJADAHONDA', ''),
+('94oj5r03r1k17qc96fsm2dc5gg', 'SERGIO', 'JIMENEZ', 'BUSTAMANTE', '', '', '2017-07-20', '', '620356434', 'TRAVESIA SAN PEDRO, Nº 4-2º A', '28220', 'MAJADAHONDA', ''),
+('982ihqqeto0ocq3br4mh7qkcnt', 'JUAN', 'AZCUE', 'VICH', '', '', '2017-07-01', '', '650642046', 'AVENIDA DE ESPAÑA, 44 PORTAL 3-2ª C', '28220', 'MAJADAHONDA', ''),
+('9dusjv06kekcnneidjf0f2pp9s', 'MIGUEL', 'DE LA CALLE', 'GONZALEZ', '', '', '2017-07-01', '', '649989574', 'CALLE BERGANTIN, 33', '28220', 'MAJADAHONDA', ''),
+('9icil4pkctmgvl9mmulq7o48ft', 'ANGEL LUIS', 'CASTEJON', 'CARPINTERO', '', '', '2017-07-01', '', '669207219', 'CALLE SAN LUIS, Nº 1-BAJO', '28220', 'MAJADAHONDA', ''),
+('9kcs6o5tplb8hcfrbnuvddhueu', 'LUCAS', 'SOTO', 'PEREZ', '', '', '2017-07-10', '', '689159022', 'CALLE HUERTA DE LA SACEDILLA, 6-12', '28221', 'MAJADAHONDA', ''),
+('9muhd41q6klkrjnq4l4vne2bd0', 'FRANCISCO', 'GALLEGO', 'BRAVO', '', '', '2017-07-01', '', '916381949', 'ALTOZANO, 6', '28220', 'MAJADAHONDA', ''),
+('a815lrunedu617egct117p3ppp', 'FERNANDO', 'REDONDO', 'VERDEJO', '', '', '2017-07-01', '', '637543889', 'CALLE SAN LUIS, 6 BAJO A', '28220', 'MAJADAHONDA', ''),
+('a9tfq5e9b4er6e0i51hp6u20vu', 'MANUEL', 'GUTIERREZ', 'GRANJO', '', '', '2017-07-01', '', '659496524', 'CALLE SAN PEDRO, Nº 1 -3º 9', '28220', 'MAJADAHONDA', ''),
+('agd48e4toqmmniqvldvfrhn7lu', 'MARIANO', 'SEDANO', 'RODRIGUEZ DE LA FLOR', '', '', '2017-07-01', '', '916394793', 'CALLE NOGAL, Nº 10', '28220', 'MAJADAHONDA', ''),
+('arq4cklgebk37icgljsisvjpnt', 'LUIS', 'LAMELA', 'LENCE', '', '', '2017-08-01', '', '609260170', 'CRTA.BOADILLA, Nº 15. P BAJA', '28220', 'MAJADAHONDA', ''),
+('as6fgqirqkl9u1lbkfdg5h93ac', 'MANUEL', 'MARIN', 'DE VICENTE-TUTOR', '', '', '2017-07-01', '', '916382956', 'X-ZULOAGA, 11-2º IZQDA', '28222', 'MAJADAHONDA', ''),
+('b61qpsnk8g85107anjr6k5g6q0', 'MANUEL', 'MARTIN', 'ROMERO', '', '', '2017-07-01', '', '620808970', 'CALLE NORIAS, 147 BAJO A', '28220', 'MAJADAHONDA', ''),
+('b7aafo5mhtfmcn7ib1dq0jintc', 'FRANCISCO', 'GARCIA-MURO', 'FERNANDEZ', '', '', '2017-07-01', '', '616416990', 'BETANZOS, Nº 15', '28430', 'ALPEDRETE', ''),
+('bg3mh65n02alc7ef0vlm3rurod', 'EVA', 'HERMIDA', 'JAREL', '', '', '2017-07-01', '', '916384896', 'ROSALIA DE CASTRO,13', '28220', 'MAJADAHONDA', ''),
+('bi3gflvr0i3005agmmp2l0svmk', 'JOSE', 'DE LA FUENTE', 'GOMEZ', '', '', '2017-07-01', '', '916391137', 'PABLO PICASSO, 12 BAJO A', '28220', 'MAJADAHONDA', ''),
+('boj37ivaku91lb2dafnfd3005e', 'RAUL', 'REDONDO', 'BARQUIN', '', '', '2017-07-01', '', '616672929', 'CALLE LAS NORIAS,  141-2º A', '28220', 'MAJADAHONDA', ''),
+('bpeqmqvpj0q3dcpau360q9jkdd', 'MIGUEL ANGEL', 'MARTIN', 'BARROSO', '', '', '2017-07-01', '', '699837352', 'TRAV. SAN PEDRO, Nº 5 -2º B', '28220', 'MAJADAHONDA', ''),
+('bt2vkpqmb3evluh345f7gj0l3s', 'RICARDO', 'RIQUELME', 'SANCHEZ DE LA VIÑA', '', '', '2017-07-01', '', '618581488', 'AVDA. LOS CLAVELES, 53-2 A', '28220', 'MAJADAHONDA', ''),
+('c10c7f14k0bp2ks1hvl0bc9jtu', 'RICARDO', 'ROMERO', 'DE TEJADA', '', '', '2017-07-01', '', '913511364', 'AVDA. DE ESPAÑA, 74', '28220', 'MAJADAHONDA', ''),
+('c22br9ppvl64kdtlj4amhdoffh', 'DAVID', 'AYUSO', 'BARTOLOME', '', '', '2017-07-01', '', '629527560', 'CALLE COTOBLANCO, 24', '28220', 'MAJADAHONDA', ''),
+('c83n253v4irrg0e9g4eu718691', 'GUZMAN IGNACIO', 'ACHA', 'LARRAÑAGA', '', '', '2017-07-01', '', '916343556', 'CALLE ZULOAGA, Nº 8-3º F', '28220', 'MAJADAHONDA', ''),
+('ce1l20ef0qjdvk2lmo182l91i5', 'CARMEN', 'VALLE', 'VEDIA', '', '', '2017-07-01', '', '', '', '', '', ''),
+('cksk1k7646bfu4gi44o73d6bju', 'ANDRES', 'BASURTO', 'SADABA', '', '', '2017-07-01', '', '659794632', 'AVDA. DE LA VICTORIA, 108-CH-3', '28023', 'MADRID', ''),
+('clqme154sk8oekrijr236lc1nu', 'EDUARDO', 'CATURLA', 'VAZQUEZ', '', '', '2017-07-01', '', '915188193', 'CALLE SOLANO, Nº 8-1º D', '28223', 'POZUELO DE ALARCON', ''),
+('cogpnhtas3h9041uqhr02eahr9', 'JUAN CARLOS', 'PEDRAZA', 'GOMEZ', '', '', '2017-07-01', '', '916396297', 'CALLE JALISCO, Nº 43', '28221', 'MAJADAHONDA', ''),
+('d7qumrgcg90hq9felgsssanagk', 'EMILIO', 'FRISA', 'MAGDALENO', '', '', '2017-07-01', '', '916398059', 'CALLE ALCALDE HELIODORA SANZ, Nº 1-3º D', '28220', 'MAJADAHONDA', ''),
+('d832b16ri66km3drmghsqr758l', 'ENRIQUE', 'DAZA', 'BARBA', '', '', '2017-07-12', '', '630910436', 'CALLE ISAAC ALBENIZ, 89-2º D', '28220', 'MAJADAHONDA', ''),
+('dn38pk02m27q3kpqn45t1ghfbk', 'JESUS', 'ALONSO', 'SANZ', '', '', '2017-07-01', '', '916386338', 'AVDA. MARE NOSTRUM. Nº 13', '28220', 'MAJADAHONDA', ''),
+('duvc979nqr2qnvb6pfogndccbg', 'VICENTE', 'ALVAREZ', 'MORENO', '', '', '2017-07-01', '', '916381735', 'SAN ANDRES, 17-1º-A', '28220', 'MAJADAHONDA', ''),
+('dvsd739lmc87nf9m3c70d1q6at', 'GONZALO', 'RIVERO', 'CANO', '', '', '2017-07-10', '', '722448152', 'CALLE VELERO, 14-7º A', '28220', 'MAJADAHONDA', ''),
+('ehmnblhvmv9m06abjm6p6hmsc5', 'MANUEL', 'GONZALEZ', 'ARRIBAS', '', '', '2017-07-01', '', '916381818', 'HERNAN CORTES,4-1º-D', '28220', 'MAJADAHONDA', ''),
+('eihtvmqcmbc2chuvuk4qac39pc', 'MANUEL', 'HERNANDEZ', 'GONZALEZ', '', '', '2017-07-01', '', '916387445', 'ISAAC PERAL, 1O-1º-C', '28220', 'MAJADAHONDA', ''),
+('enfe2ds9hlt86cg45oi3p6o0oe', 'FERNANDO', 'MONTERO', 'QUILEZ', '', '', '2017-07-01', '', '615646415', 'CALLE MORENO TORROBA, Nº 26 BAJO B', '28220', 'MAJADAHONDA', ''),
+('erf887fqe7g09riicp7kc7scgh', 'ALEJANDRO', 'PEREZ', 'ESCRIBANO', '', '', '2017-07-01', '', '916382690', 'MAR EGEO, Nº 5', '28220', 'MAJADAHONDA', ''),
+('f1pto4khn12kj9ub1ft2h49esu', 'FRANCISCO', 'GARCIA-MURO', 'SAN JOSE', '', '', '2017-07-01', '', '616416990', 'BETANZOS N 15', '28430', 'ALPEDRETE', ''),
+('fb1r7jsbeu9fquruconpu4bhqp', 'SEBASTIAN', 'TRUYOLS', 'MATEU', '', '', '2017-07-01', '', '636891964', 'CALLE ROSALIA DE CASTRO, 9-3º C', '28220', 'MAJADAHONDA', ''),
+('ffmtsc14574ltna1ik59fhk6rj', 'JAVIER', 'AGUINACO', 'URTARAN', '', '', '2017-07-01', '', '609626566', 'MARE NOSTRUM. Nº 19', '28220', 'MAJADAHONDA', ''),
+('fjgvth6v389l7vu598svk3sh2b', 'DAVID', 'GARCIA', 'FERNANDEZ', '', '', '2017-07-01', '', '636034906', 'CALLE SACRIFICIO, Nº 26-1º', '28220', 'MAJADAHONDA', ''),
+('fp0rmn9lk9sro951n0f4sgh8hv', 'JUAN', 'MARTIN', 'OLMO', '', '', '2017-07-01', '', '916383628', 'SAN ANDRES, 39-1º-D', '28220', 'MAJADAHONDA', ''),
+('fqbmm795n12sm88sahsel8t8kd', 'CESAR', 'MARTIN', 'FONTANA', '', '', '2017-07-01', '', '666503462', 'CALLE SARASATE, 8-2º A', '28220', 'MAJADAHONDA', ''),
+('fqkapgcdnoevr1f0q92ireem3m', 'BEATRIZ', 'GARCIA-MURO', 'FERNANDEZ', '', '', '2017-07-01', '', '616416990', 'BETANZOS, Nº 15', '28430', 'ALPEDRETE', ''),
+('g12tusolso748dlnkiranf2eqg', 'ROBERTO', 'LEIVA', 'GRANDE', '', '', '2017-07-01', '', '276741955', 'CALLE SANTA LUCIA, 15 BAJO B', '28220', 'MAJADAHONDA', ''),
+('gt925r4rfg7k50vcqi4qu8mehl', 'JOSE', 'LEON', 'GONZALEZ', '', '', '2017-07-01', '', '690021700', 'CALLE MORERAS, 41 PORTAL Bº A', '28220', 'MAJADAHONDA', ''),
+('h1r92dvm81qav7alvqcpn2kar6', 'CARLOS', 'ECHEVARRIA', 'GONZALEZ', '', '', '2017-07-31', '', '691612229', 'CALLE HIGUERAS, 14', '', 'POZUELO DE ALARCON', ''),
+('h4r1sf8skelvvn30peguagp9sd', 'FERNANDO', 'GRANIZO', 'BARBAS', '', '', '2017-07-01', '', '650800978', 'CALLE PUERTO DE SOMOSIERRA, 5 1º A', '28220', 'MAJADAHONDA', ''),
+('h56hteajp4iqn7q99e88ufg31o', 'ANTONIO', 'RODRIGUEZ', 'LOPEZ', '', '', '2017-07-01', '', '673828135', 'CALLE ARCO DE PONIENTE, 9-1º D', '28220', 'MAJADAHONDA', ''),
+('hc1h2grjq261283lpqmhlmfb3q', 'JORGE ANTONIO', 'UNSAIN', 'PEREA', '', '', '2017-07-01', '', '914791821', '', '', '', ''),
+('hd53svnn2tbetsafhm1bdkm14i', 'ENRIQUE', 'DAZA', 'TELLEZ', '', '', '2017-07-01', '', '916380015', 'SAN ANDRES, Nº 17', '28220', 'MAJADAHONDA', ''),
+('htejgev1jfp9m09q1aagsrgop', 'CRISTIAN', 'MARCOS', 'DE LA CAÑA', '', '', '2017-07-06', '', '645745331', 'CALLE SAN ANDRES', '28220', 'MAJADAHONDA', ''),
+('i3g2epn1beg1lq4ni89g90q3vh', 'JUAN PABLO', 'TRENADO', 'GUTIERREZ', '', '', '2017-07-01', '', '619621966', 'CERRO DEL ESPINO, 7 PO 1 C', '28220', 'MAJADAHONDA', ''),
+('i6j0asn2t8p4kqjdi77b1678o', 'FCO. JOSE ANTONIO', 'FOMPEROSA', 'MARTIN', '', '', '2017-07-01', '', '916346619', 'MONCAYO, 32', '28220', 'MAJADAHONDA', ''),
+('ibjpsdnm5r7b29e2jqmed1th5v', 'JOSE MARIA', 'NUÑEZ', 'GARCIA', '', '', '2017-07-01', '', '', 'AVDA. DE EUROPA, 31 -3º A', '', 'POZUELO DE ALARCON', ''),
+('ie314o9hs6kigt5t6d4dl2c66h', 'ALBERTO', 'MARTIN', 'NUÑO', '', '', '2017-07-01', '', '696369640', 'PADRE COLOMA, Nº 15-1º IZQ', '28027', 'MADRID', ''),
+('if2dbm9apo0vj1tfbf7e81ifq9', 'ALFREDO', 'DE LA CRUZ', 'BLASCO', '', '', '2017-07-01', '', '916345791', 'CALLE VIÑAS, 3-3º A', '28220', 'MAJADAHONDA', ''),
+('ifot9bv81adfgvgok9et6vfosg', 'MACARENA', 'ALVAREZ', 'ALVAREZ', '', '', '2017-07-01', '', '916382907', 'CERRO DEL AIRE,6-3303', '28220', 'MAJADAHONDA', ''),
+('igkplc02qfb04u28tdd1uodau6', 'FERNANDO', 'RAIMUNDO', 'RODRIGUEZ', '', '', '2017-07-01', '', '616960996', 'CALLE CARRETERA DE BOADILLA, Nº 22-4º I', '28220', 'MAJADAHONDA', ''),
+('j6dvh1cs1oo28upcsdfoha388g', 'MATEO', 'MESTRE', 'JIMENEZ DE MUÑANA', '', '', '2017-07-24', '', '646751611', 'CALLEL CERRO DEL ESPINO, 16 BAJO B', '28221', 'MAJADAHONDA', ''),
+('jdqkrt4be7c3eov7c7rinkifai', 'JUAN JOSE', 'BUSTILLO', 'MAGDALENO', '', '', '2017-07-01', '', '629424356', 'CALLE SANTA CATALINA, 14 -1º D', '28220', 'MAJADAHONDA', ''),
+('jeot8k79se73af0b2msmuht53o', 'RICARDO', 'PALACIOS', 'BENITO', '', '', '2017-07-01', '', '687857038', 'CALLE OLIVA 15-1 B', '28210', 'VALDEMORILLO', ''),
+('jg3ia9t8s5hsbi9m4godjo7prs', 'JOSE', 'DOMINGUEZ', 'MURILLO', '', '', '2017-07-01', '', '916382226', 'SAN ANTONIO, Nº 14', '28220', 'MAJADAHONDA', ''),
+('jonjv7fpi1omsa3kbea5nkf7rp', 'JOSE LUIS', 'BILBAO', 'REY', '', '', '2017-07-01', '', '916396688', 'AVDA. ESPAÑA, 28-3º-L', '28220', 'MAJADAHONDA', ''),
+('jua9e6c38ob4ir5m7sqt7tlm1g', 'MARIA ISABEL', 'BERNAL', 'BRAVO', '', '', '2017-07-01', '', '690021701', 'CALLE MORERAS, 41 PORTAL 2 BAJO A', '28220', 'MAJADAHONDA', ''),
+('k5g6r0dsgpf2ck61dsil9a5pnp', 'CARLOS', 'SANCHEZ', 'CORTES', '', '', '2017-07-01', '', '916342959', 'TRAVESIA DE SAN PEDRO, 6 BAJO C', '28220', 'MAJADAHONDA', ''),
+('k622rc5tq8kmrcos9er1jbg0nv', 'JESUS', 'MENDEZ', 'LOPEZ', '', '', '2017-07-01', '', '658914335', 'ANTONIO MACHADO, 12', '28220', 'MAJADAHONDA', ''),
+('k6bmb9is6etnqt5h4bv3erjlrt', 'CASTO', 'GALLARDO', 'PESO', '', '', '2017-07-01', '', '', 'AVDA. JUAN CARLOS I, Nº 21-4º C', '28220', 'MAJADAHONDA', ''),
+('k7f69hmuh2t7g1t9upattsuf24', 'ALBERTO', 'MARTIN', 'VARA', '', '', '2017-07-01', '', '696369640', 'PADRE COLOMA, Nº 15-1º IZQDA.', '28027', 'MADRID', ''),
+('ka1r6847t3sd188i6tsmpk8f0q', 'NOELIA', 'ARROYO', 'JUZGADO', '', '', '2017-07-01', '', '660867581', 'CALLE SAN ANTONIO, Nº 10-2.D', '28220', 'MAJADAHONDA', ''),
+('kb71788vla77321h49gmhobds2', 'ENRIQUE', 'LIEBANAS', 'MARTINEZ', '', '', '2017-07-01', '', '916393628', 'SANTA BARBARA, Nº 13', '28220', 'MAJADAHONDA', ''),
+('khm98ddn7k3ufjl1kjso7495m0', 'JUAN MARIA', 'LANTERO', 'BASTOS', '', '', '2017-07-01', '', '619311871', 'CALLE DOCTOR BASTOS, 42-3º B', '28220', 'MAJADAHONDA', ''),
+('kihgq7m9jmcrdal88cjs9f7jde', 'JORGE', 'VALLE', 'VEDIA', '', '', '2017-07-01', '', '', '', '', '', ''),
+('kpq7n5f10qvha5e1cfsa5kci51', 'MARIO', 'SIMARRO', 'CABELLO', '', '', '2017-07-01', '', '685134459', 'CALLE SANTA ISABEL, Nº 12-2º 1', '28220', 'MAJADAHONDA', ''),
+('le0q3fj9rbdtm2p0j43nu10r6q', 'MANUELA', 'PAREDES', 'CABALLERO', '', '', '2017-07-01', '', '916936532', 'AVDA. DOCOTR FLEMING, Nº 2 Bº A', '28912', 'LEGANES', ''),
+('ltldapvo4664sottg0nrrj78hm', 'PEDRO', 'LABRANDERO', 'GREGORIO', '', '', '2017-07-01', '', '916380638', 'DOCTOR CALERO, 25', '28220', 'MAJADAHONDA', ''),
+('m07l5blvfvqq5uoia10o2ah51b', 'MIGUEL', 'GARCIA', 'NAVARRO', '', '', '2017-07-01', '', '607713225', 'CALLE COMUNIDAD DE MADRID, Nº 30-CHALE', '28660', 'BOADILLA DEL MONTE', ''),
+('mbjpegpj1t9q9b8gej5bf87eul', 'DANIEL', 'PRADA', 'SAN MARTIN', '', '', '2017-08-08', '', '646522258', 'TRAVESIA SAN PEDRO, 1 2º A', '28220', 'MAJADAHONDA', ''),
+('me9guqel3lbj53unl73itg8rme', 'AMBROSIO', 'REDONDO', 'GALLEGO', '', '', '2017-07-01', '', '607283572', 'PLAZA ESCORIAL, 4-1º', '28220', 'MAJADAHONDA', ''),
+('mf1ekruj61c2ok5hc1u8ct04vm', 'EDUARDO', 'FERNANDEZ', 'ROBLEDA', '', '', '2017-07-01', '', '638429708', 'SANTO TOMAS, 16 -BAJO-1', '28220', 'MAJADAHONDA', ''),
+('mfo75embaq117mnuhd2kpdt7jj', 'FRANCISCO', 'GARCIA', 'BARRIO', '', '', '2017-07-01', '', '916387183', 'AVDA. ESPAÑA, 28-2º-M', '28220', 'MAJADAHONDA', ''),
+('mibuimuhc4v8ajeai2dt7bv76l', 'EMILIO', 'ANTELO', 'ALAMAN', '', '', '2017-07-01', '', '916387378', 'SAN PEDRO, Nº 19-3º-D', '28220', 'MAJADAHONDA', ''),
+('mrips3ub0l5pd34b2odg2m3qjl', 'FLORENCIO', 'VALLINOT', 'TOVAR', '', '', '2017-07-01', '', '620095458', 'CALLE IREGUA, Nº 2-1-1', '28231', 'LAS ROZAS', ''),
+('mvioggbbpau57tlqihuctlia09', 'JOSE ANTONIO', 'JARILLO', 'ARROYO', '', '', '2017-07-01', '', '916723085', 'CUBA, Nº 2-1º C', '28820', 'COSLADA', ''),
+('n1g68mq4h49l388ms60hfo5dc5', 'LUCIO', 'DE FRUTOS', 'PEREZ', '', '', '2017-07-01', '', '916382514', 'DOCTOR BASTOS, 9-REST.AS BASTOS', '28220', 'MAJADAHONDA', ''),
+('n6v14ap69j7qhukhcli972bdl3', 'LIDIA', 'GARCIA', 'RUBIO', '', '', '2017-07-01', '', '629568238', 'CALLE LA CORNISA, 13-3º C', '28231', 'LAS ROZAS', ''),
+('nfgiujlcr3r3mrfsrv955s6t8t', 'MIGUEL', 'GARCIA-MURO', 'FERNANDEZ', '', '', '2017-07-01', '', '616416990', 'BETANZOS, Nº 15', '28430', 'ALPEDRETE', ''),
+('o4851r3750nrehl5vj7qlvftrg', 'LORETO', 'FERNANDEZ', 'HERMIDA', '', '', '2017-07-01', '', '616416990', 'BETANZOS, Nº 15', '28430', 'ALPEDRETE', ''),
+('o56l3jf0c0m3fqbm0kj28us0n1', 'JULIO', 'VEGA', 'ARNAEZ', '', '', '2017-06-27', '', '659482836', 'VAGUADA ARCIPRESTE, 26-3º A', '28220', 'MAJADAHONDA', ''),
+('o5hn3n6s4pn3ad27b7if7ohp52', 'EDUARDO', 'AMAT', 'REDONDO', '', '', '2017-07-01', '', '', 'AVDA. CAMPILLO DE SAN ISIDRO, 22', '28521', 'RIVAS VACIAMADRID', ''),
+('ovij0rvskr750ipjclr5luo71s', 'PABLO', 'CANO', 'MARIN', '', '', '2017-07-10', '', '693300826', 'CALLE ROSALIA DE CASTRO, 15', '28220', 'MAJADAHONDA', ''),
+('p1pplmct60cufnev792rlmgk40', 'JOSE LUIS', 'LANZOS', 'SANZ', '', '', '2017-07-01', '', '916394023', 'CALLE CERVANTES, 5-3º A', '28220', 'MAJADAHONDA', ''),
+('p2pqd0o02iq3h2i5ls8crbms62', 'ALEJANDRO', 'ARRIBAS', 'GARRIDO', '', '', '2017-07-01', '', '672130169', 'CALLE TELEMACO, 28', '28232', 'LAS ROZAS', ''),
+('p7d6p6lrabar1di5paf42f644g', 'JUAN CARLOS', 'MATINEZ', 'BERLANAS', '', '', '2017-07-01', '', '916395064', 'CID, Nº 6-1º-A', '28220', 'MAJADAHONDA', ''),
+('p89jaoq65lgu4cnpvuc0rqtnab', 'FELIX', 'LEON', 'VAQUERO', '', '', '2017-07-01', '', '917150368', 'CEDROS, Nº 17', '28223', 'POZUELO DE ALARCON', ''),
+('pdrhtu9050k1l8njqdaht12ui8', 'JERONIMA', 'PALMERO', 'VILLALOBOS', '', '', '2017-07-01', '', '916394023', 'CALLE CERVANTES, 5-3º A', '28220', 'MAJADAHONDA', ''),
+('pe8st4apkei341mcnbmj9jnorr', 'ENRIQUE', 'BERROJALVIZ', 'LORENZO', '', '', '2017-07-01', '', '690730617', 'AVENIDA PADRE PIQUER, 60-5º C', '28024', 'MADRID', ''),
+('pn36i87119dllsrh4mcotp0vgd', 'ROMULO', 'ACEDO', 'ORTIZ', '', '', '2017-07-01', '', '620786934', 'CALLE NORTE Nº 9-1º D', '28223', 'MAJADAHONDA', ''),
+('prptd8jt9650ei4pamsl2o4q3k', 'RAMON LUIS', 'ARILLA', 'TORRES', '', '', '2017-07-01', '', '917150250', 'ENRIQUE GRANADOS, Nº 8-PORTAL F 2º C', '28224', 'POZUELO DE ALARCON', ''),
+('qel8fse3eg2vnm87b86loihtq1', 'ALVARO', 'DIAZ', 'GUTIERREZ', '', '', '2017-07-24', '', '646746469', 'SANTA BRIGIDA, 35-1º B', '28221', 'MAJADAHONDA', ''),
+('qpf53aet60f79fnjqv5nklj9r4', 'MANUEL JOSE', 'ALCAZAR', 'HERNANDEZ', '', '', '2017-07-01', '', '686217982', 'CALLE RIO BULLAQUE, 4 BIS 2º C', '28034', 'MADRID', ''),
+('qu5ug9mplkm9a68vp68n5dhr97', 'JUAN CARLOS', 'VILLEGAS', 'HERNANDEZ', '', '', '2017-07-26', '', '617497587', 'CALLE BRASIL, Nº 4', '', 'LAS MATAS', ''),
+('r0j6tarb43m8gltmjdkj8lqgni', 'FCO. JAVIER', 'GOMEZ', 'SANTORCAZ', '', '', '2017-07-01', '', '918590261', 'RENAULT', '28250', 'TORRELODONES', ''),
+('rknc8q7slgcbp5qc42gc2nep7n', 'RESTITUTO', 'MARTIN', 'GUTIERREZ', '', '', '2017-07-01', '', '916381669', 'SAN ANDRES, Nº 2-3º-B', '28220', 'MAJADAHONDA', ''),
+('rlg1os8d3nbiv1lqal18r95j7v', 'LORENZO', 'MARTINEZ', 'JIMENEZ', '', '', '2017-07-01', '', '916386986', 'PELAYO,Nº 2-1º B', '28220', 'MAJADAHONDA', ''),
+('rljr3qki52bstpt84aj81jl3j9', 'PABLO', 'VALSECA', 'VEDIA', '', '', '2017-07-01', '', '911889446', 'AVDA. ESPARTA Nº 61', '28231', 'LAS ROZAS', ''),
+('rn0vmjb9fes3d101iamuq0lcgv', 'ASHOT', 'MARDOYAN', '', '', '', '2017-07-01', '', '657414782', 'CALLE RIO TAJO, 7', '28660', 'BOADILLA DEL MONTE', ''),
+('s30v44evatvgc2ighvfrc2isaq', 'GUILLERMO', 'SAN ROMAN', 'CALVAR', '', '', '2017-07-01', '', '660023959', 'LAS NORIAS  61 -2º B', '28220', 'MAJADAHONDA', ''),
+('s34a3708g6eehip8ofelp56962', 'SUSANA', 'VEDIA', 'HERMIDA', '', '', '2017-07-01', '', '916384896', 'ROSALIA DE CASTRO, Nº 13-3º-A', '28220', 'MAJADAHONDA', ''),
+('s8va74q270frv48b8bkq617l6h', 'DOLORES', 'VEDIA', 'HERMIDA', '', '', '2017-07-01', '', '916384896', 'ROSALIA DE CASTRO, Nº 13-3º-A', '28220', 'MAJADAHONDA', ''),
+('s9k2b0d9otm7fabga4n6vh7jta', 'NATALIA VALERIEVA', 'OBRECHKOVA', '', '', '', '2017-07-01', '', '', 'AVDA. DE LOS ANGELES, 83', '28903', 'GETAFE', ''),
+('s9unbvquu99rk01b5e0i4cir10', 'ENRIQUE', 'DAZA', 'BARBA', '', '', '2017-07-01', '', '630910436', 'CALLE ISAAC ALBENIZ, Nº 89-2º D', '28220', 'MAJADAHONDA', ''),
+('scm350ft5nco9gpfudgkdid70a', 'SERGIO', 'AGUDO', 'VEDIA', '', '', '2017-07-01', '', '654093497', 'AVDA. DE LOS ANGELES, 83', '28903', 'GETAFE', ''),
+('sdqkilbv4ro71qb38v5v0jdstm', 'JUAN MANUEL', 'MUÑOZ', 'HURTADO', '', '', '2017-07-01', '', '629869390', 'CALLE DOCTOR ARCE, Nº 2 -3º A', '28220', 'MAJADAHONDA', ''),
+('sgu6q7m14jj831q1v2oi9tttho', 'ALEXIS', 'SALVADOR', 'ALTAMIRANO', '', '', '2017-07-17', '', '646813625', 'CALLE VIRGEN DE LORETO, 3-1º C', '28220', 'MAJADAHONDA', ''),
+('so6v1ana8v0u0ahvetgujv8r6n', 'MANUEL', 'MARTIN', 'ROMERO', '', '', '2017-07-20', '', '620808970', 'CALLE NORIAS, 147 BAJO A', '28221', 'MAJADAHONDA', ''),
+('sqqhm1i060rkgjssbmvl4fvpm', 'JAVIER', 'GARCIA', 'MORENO', '', '', '2017-07-01', '', '622210212', 'CALLE CID, Nº 4 PO 2 B', '28220', 'MAJADAHONDA', ''),
+('sr43nmlbaj3rfahqb3pqkumte7', 'ANGEL', 'GARCI', 'ARIAS', '', '', '2017-07-01', '', '616252559', 'CALLE SAN ROQUE, 43-BAJO E', '28220', 'MAJADAHONDA', ''),
+('srlv4t0hoev11f6q21fmq70l6d', 'CARLOS', 'SANZ', 'CALVO', '', '', '2017-07-01', '', '916391619', 'PUERTO DE LOS LEONES, 7', '28220', 'MAJADAHONDA', ''),
+('sth7ki90eedldfcma44lgfunj5', 'EUTIQUIO', 'MARTIN', 'DEL POZO', '', '', '2017-07-01', '', '916381469', 'CALLE SAN ANDRES, Nº 2-3º C', '28220', 'MAJADAHONDA', ''),
+('t4h554c6lliilfofambe6ebfmn', 'JAVIER', 'VIZCARRA', 'ENCUENTRA', '', '', '2017-07-01', '', '916384053', 'COLOMBIA, 8-4º B', '28220', 'MAJADAHONDA', ''),
+('tkuj30j61b5lacfcov8pmmogq2', 'ANDRES', 'RAMOS', 'GONZALEZ', '', '', '2017-07-01', '', '645918121', 'CALLE CHARAIMA, 21-2º B', '28220', 'MAJADAHONDA', ''),
+('u00o4orj165ovv7m20avhgnkt0', 'CARLOS', 'SANCHEZ', 'HERNANDEZ', '', '', '2017-07-01', '', '916342959', 'TRAVESIA DE SAN PEDRO, 6 BAJO C', '28220', 'MAJADAHONDA', ''),
+('u3cv2f21i9p1ukcghgd52cschd', 'MIGUEL', 'GONZALEZ', 'ESTEBAN', '', '', '2017-07-01', '', '699704712', 'CARRETERA DE BOADILLA, 61', '28220', 'MAJADAHONDA', ''),
+('u767cc88272ufg1kr2b0152att', 'JOAQUIN', 'MARTINEZ', 'RODRIGUEZ', '', '', '2017-07-01', '', '666737307', 'CALLE SAN ANDRES, 10 P 04 F', '28220', 'MAJADAHONDA', ''),
+('uspqk1d8d4heg3oh560jisluoo', 'JAVIER', 'TORRIJOS', 'MUÑOZ', '', '', '2017-07-01', '', '639198420', 'DOCTOR PEREZ GALLARDO, 5 ESC. 2 BAJO C', '28220', 'MAJADAHONDA', ''),
+('v9f5unsr2kvkgnks649gt5sh1m', 'IGNACIO', 'ESTEVEZ', 'ALVAREZ', '', '', '2017-07-01', '', '916383665', 'AVDA. DE ESPAÑA, 34-1º-4', '28220', 'MAJADAHONDA', ''),
+('vh552kol6flf2g50a1hnv201b1', 'RAMIRO', 'AGUILAR', 'DESCALZO', '', '', '2017-07-01', '', '916383324', 'LA FLOR, 9-2º', '28220', 'MAJADAHONDA', ''),
+('vlkdumcljv3hklha2d3cala0ef', 'FCO. JAVIER', 'CUBO', 'CUBO', '', '', '2017-07-01', '', '609021644', 'MARIA AUXILIADORA, 16', '28220', 'MAJADAHONDA', ''),
+('vmh8d5ffukbkcd06vba2t6pcg', 'IGNACIO', 'GANDARA', 'ARIN', '', '', '2017-07-01', '', '620413028', 'CRTRA. DEL PLANTIO, Nº 41-3º C', '28220', 'MAJADAHONDA', ''),
+('vmmcubtnu3cv8cvjd74ecmdv3e', 'ALBERTO', 'GALA', 'MONTERO', '', '', '2017-07-01', '', '916384541', 'DR.MARAÑON, 47-2º IZQDA.', '28220', 'MAJADAHONDA', ''),
+('vpkvjrot71dki3p93309m1vtdb', 'MARIA', 'VEDIA', 'HERMIDA', '', '', '2017-07-01', '', '916384896', 'ROSALIA DE CASTRO, Nº 13-3º-A', '28220', 'MAJADAHONDA', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+CREATE TABLE `usuario` (
+  `id_usuario` int(11) NOT NULL,
+  `user` varchar(32) COLLATE utf8_bin NOT NULL,
+  `pass` varchar(64) COLLATE utf8_bin NOT NULL,
+  `role` varchar(45) COLLATE utf8_bin NOT NULL,
+  `activo` varchar(45) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  `createDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Truncar tablas antes de insertar `usuario`
+--
+
+TRUNCATE TABLE `usuario`;
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id_usuario`, `user`, `pass`, `role`, `activo`, `createDate`) VALUES
+(13, 'ggamboa', '914420a9b210195dea7e8a1fdc5234fb1f413c04dba3b5eaabed9df6adb47f51', 'sudo', '1', '2017-05-15 12:13:10');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_data`
+--
+
+DROP TABLE IF EXISTS `usuario_data`;
+CREATE TABLE `usuario_data` (
+  `id_usuario` int(11) NOT NULL,
+  `nombre` varchar(45) COLLATE utf8_bin NOT NULL,
+  `apellido1` varchar(45) COLLATE utf8_bin NOT NULL,
+  `apellido2` varchar(45) COLLATE utf8_bin NOT NULL,
+  `dni` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `nacimiento` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Truncar tablas antes de insertar `usuario_data`
+--
+
+TRUNCATE TABLE `usuario_data`;
+--
+-- Volcado de datos para la tabla `usuario_data`
+--
+
+INSERT INTO `usuario_data` (`id_usuario`, `nombre`, `apellido1`, `apellido2`, `dni`, `nacimiento`, `email`) VALUES
+(13, 'gustavo', 'gamboa', 'cordero', '75891423', '04/05/1983', 'gustavo@gmbdesign.es');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `credencial`
+--
+ALTER TABLE `credencial`
+  ADD PRIMARY KEY (`idCredencial`);
+
+--
+-- Indices de la tabla `evento`
+--
+ALTER TABLE `evento`
+  ADD PRIMARY KEY (`idEvento`);
+
+--
+-- Indices de la tabla `socio`
+--
+ALTER TABLE `socio`
+  ADD PRIMARY KEY (`idAbonado`),
+  ADD UNIQUE KEY `codigoSistema_Unico` (`codigoSistema`) USING BTREE,
+  ADD UNIQUE KEY `numeroSocio_Unico` (`numero`);
+
+--
+-- Indices de la tabla `socio_data`
+--
+ALTER TABLE `socio_data`
+  ADD PRIMARY KEY (`codigoSistema`);
+
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `user_UNIQUE` (`user`);
+
+--
+-- Indices de la tabla `usuario_data`
+--
+ALTER TABLE `usuario_data`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `dni_UNIQUE` (`dni`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `credencial`
+--
+ALTER TABLE `credencial`
+  MODIFY `idCredencial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT de la tabla `evento`
+--
+ALTER TABLE `evento`
+  MODIFY `idEvento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT de la tabla `socio`
+--
+ALTER TABLE `socio`
+  MODIFY `idAbonado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=194;
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `usuario_data`
+--
+ALTER TABLE `usuario_data`
+  ADD CONSTRAINT `fk_usuarios_data_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
